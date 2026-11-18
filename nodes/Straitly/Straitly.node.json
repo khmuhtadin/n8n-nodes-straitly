@@ -1,0 +1,12 @@
+{
+	"node": "n8n-nodes-straitly",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["AI"],
+	"subcategories": { "AI": ["Root Nodes"] },
+	"alias": ["straitly", "llm", "ai gateway", "claude", "gpt", "gemini", "deepseek", "openai compatible", "chat completion"],
+	"resources": {
+		"credentialDocumentation": [{ "url": "https://straitly.ai/docs/authentication" }],
+		"primaryDocumentation": [{ "url": "https://github.com/khmuhtadin/n8n-nodes-straitly#readme" }]
+	}
+}
