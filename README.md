@@ -65,7 +65,7 @@ Check the field values and model availability before running. Chat requests can 
 
 ## Compatibility
 
-Requires Node.js 20 or newer. The package is intended for n8n installations that support community nodes; n8n Cloud availability depends on verification and has not been established by this package.
+Requires Node.js 20 or newer. Tested on n8n 3.0.0 (self-hosted): the Straitly node, its AI Agent tool variant and Straitly Chat Model inside an AI Agent. The package is not a verified community node yet, so it is not available on n8n Cloud.
 
 ## Development
 

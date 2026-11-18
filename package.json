@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-straitly",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "n8n community node for Straitly, the AI gateway: a chat model for the AI Agent plus a node (also usable as an agent tool) to call Claude, GPT, Gemini, DeepSeek and more, list models and prices, check balance, manage child keys and read request logs.",
 	"license": "MIT",
 	"homepage": "https://github.com/khmuhtadin/n8n-nodes-straitly#readme",
