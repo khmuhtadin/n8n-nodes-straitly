@@ -61,6 +61,12 @@ Import these from the n8n editor using **Workflow menu > Import from File**, the
 - [Choose a vision model](examples/cheapest-vision.json): selects by listed input-token price, not total cost. Supply an image in the prompt as needed.
 - [Low-balance alert](examples/low-balance-alert.json): replace the placeholder with a notification node and set your threshold.
 
+Larger templates (submitted to the n8n template library, each with a second lane and a log):
+
+- [Compare LLM answers and real costs](examples/template-llm-model-compare.json): one prompt, several models, cost and latency per answer, a judge model and a Google Sheets log.
+- [Track LLM prices and balance](examples/template-llm-price-and-balance-watch.json): daily catalog diff and hourly balance alerts in Slack, stored in n8n data tables.
+- [Prepare support replies with an AI Agent](examples/template-support-email-triage-agent.json): Straitly Chat Model, an FAQ sheet as the agent's tool, Gmail drafts only.
+
 Check the field values and model availability before running. Chat requests can incur charges.
 
 ## Compatibility
