@@ -32,14 +32,21 @@ export async function getBaseUrl(this: Ctx): Promise<string> {
 }
 
 function statusOf(error: unknown): number | undefined {
-	const e = error as { httpCode?: string | number; response?: { status?: number }; status?: number };
+	const e = error as {
+		httpCode?: string | number;
+		response?: { status?: number };
+		status?: number;
+	};
 	const raw = e?.httpCode ?? e?.response?.status ?? e?.status;
 	const n = Number(raw);
 	return Number.isFinite(n) ? n : undefined;
 }
 
 function errorBodyOf(error: unknown): IDataObject | undefined {
-	const e = error as { response?: { body?: unknown; data?: unknown }; context?: { data?: unknown } };
+	const e = error as {
+		response?: { body?: unknown; data?: unknown };
+		context?: { data?: unknown };
+	};
 	const body = e?.response?.body ?? e?.response?.data ?? e?.context?.data;
 	if (body && typeof body === 'object') return body as IDataObject;
 	if (typeof body === 'string') {
@@ -62,10 +69,10 @@ function retryAfterMs(error: unknown, attempt: number): number {
 
 const HINTS: Record<number, string> = {
 	401: 'Check that the Straitly API key in your credential is active.',
-	402: 'Your Straitly balance or this key\'s spending cap is used up. Add credits at straitly.ai/app/wallet.',
+	402: "Your Straitly balance or this key's spending cap is used up. Add credits at straitly.ai/app/wallet.",
 	403: 'This key is not allowed to do this. Child-key and request-log calls need an account key with minting enabled.',
 	404: 'Not found. For models, check the ID against the Model > Get Many operation.',
-	429: 'Rate limit, concurrency limit or budget reached. Lower the request rate or raise the key\'s cap.',
+	429: "Rate limit, concurrency limit or budget reached. Lower the request rate or raise the key's cap.",
 };
 
 /** Calls the Straitly API with the credential, retrying 429/5xx with Retry-After. */
@@ -141,7 +148,8 @@ export async function straitlyApiRequestAllItems(
 		});
 		const rows = Array.isArray(page[dataKey]) ? (page[dataKey] as IDataObject[]) : [];
 		out.push(...rows);
-		cursor = typeof page.next_cursor === 'string' && page.next_cursor ? page.next_cursor : undefined;
+		cursor =
+			typeof page.next_cursor === 'string' && page.next_cursor ? page.next_cursor : undefined;
 		if (!rows.length) break;
 	} while (cursor && (limit === undefined || out.length < limit));
 	return limit !== undefined ? out.slice(0, limit) : out;

@@ -1,0 +1,197 @@
+{
+  "name": "Straitly: cheapest vision model by input price",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Overview\nList models, pick an image-capable model with the lowest listed prompt-token price, and message it. Input price alone is not total cost; add image content to the message to use vision.",
+        "width": 1440,
+        "height": 185
+      },
+      "id": "overview",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Start",
+        "width": 235,
+        "height": 210,
+        "color": 7
+      },
+      "id": "start-area",
+      "name": "Start area",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -30
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### List models",
+        "width": 235,
+        "height": 210,
+        "color": 7
+      },
+      "id": "models-area",
+      "name": "Models area",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        180,
+        -30
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Pick the cheapest listed input price",
+        "width": 320,
+        "height": 210,
+        "color": 7
+      },
+      "id": "selection-area",
+      "name": "Selection area",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        440,
+        -30
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Message the selected model",
+        "width": 340,
+        "height": 210,
+        "color": 7
+      },
+      "id": "chat-area",
+      "name": "Chat area",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        785,
+        -30
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "start",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "model",
+        "operation": "getMany",
+        "returnAll": true,
+        "simplify": false
+      },
+      "id": "get-models",
+      "name": "Get Models",
+      "type": "n8n-nodes-straitly.straitly",
+      "typeVersion": 1,
+      "position": [
+        250,
+        40
+      ],
+      "credentials": {
+        "straitlyApi": {
+          "name": "Your Straitly API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const models = $input.all().flatMap(i => Array.isArray(i.json.data) ? i.json.data : [i.json]);\nconst candidates = models.filter(m => m.architecture?.input_modalities?.includes('image') && m.pricing?.prompt != null && m.pricing.prompt !== '' && Number.isFinite(Number(m.pricing.prompt)) && Number(m.pricing.prompt) >= 0).sort((a, b) => Number(a.pricing.prompt) - Number(b.pricing.prompt));\nif (!candidates.length) throw new Error('No vision model with a listed input price was returned');\nreturn [{json: {model: candidates[0].id, inputPrice: candidates[0].pricing.prompt}}];"
+      },
+      "id": "select-vision-model",
+      "name": "Select Vision Model",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        510,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "complete",
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.model }}"
+        },
+        "inputMode": "prompt",
+        "prompt": "Describe the image briefly.",
+        "options": {
+          "imageUrls": "https://example.com/replace-with-your-image.jpg"
+        }
+      },
+      "id": "message-a-model",
+      "name": "Message a Model",
+      "type": "n8n-nodes-straitly.straitly",
+      "typeVersion": 1,
+      "position": [
+        855,
+        40
+      ],
+      "credentials": {
+        "straitlyApi": {
+          "name": "Your Straitly API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get Models",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Models": {
+      "main": [
+        [
+          {
+            "node": "Select Vision Model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select Vision Model": {
+      "main": [
+        [
+          {
+            "node": "Message a Model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

@@ -2,11 +2,29 @@
 	"node": "n8n-nodes-straitly",
 	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
-	"categories": ["AI"],
-	"subcategories": { "AI": ["Root Nodes"] },
-	"alias": ["straitly", "llm", "ai gateway", "claude", "gpt", "gemini", "deepseek", "openai compatible", "chat completion"],
+	"categories": ["Development"],
+	"alias": [
+		"Straitly",
+		"AI gateway",
+		"LLM",
+		"large language model",
+		"chat completion",
+		"OpenAI compatible",
+		"Claude",
+		"GPT",
+		"Gemini",
+		"DeepSeek"
+	],
 	"resources": {
-		"credentialDocumentation": [{ "url": "https://straitly.ai/docs/authentication" }],
-		"primaryDocumentation": [{ "url": "https://github.com/khmuhtadin/n8n-nodes-straitly#readme" }]
+		"credentialDocumentation": [
+			{
+				"url": "https://straitly.ai/docs/authentication"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/khmuhtadin/n8n-nodes-straitly#readme"
+			}
+		]
 	}
 }

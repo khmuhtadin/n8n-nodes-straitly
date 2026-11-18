@@ -1,0 +1,106 @@
+{
+  "name": "Straitly: simple prompt",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Overview\nSend a short prompt to a Straitly model. Choose your credential and check the model ID before running.",
+        "width": 800,
+        "height": 180
+      },
+      "id": "overview",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Start manually",
+        "width": 260,
+        "height": 210,
+        "color": 7
+      },
+      "id": "prompt-area",
+      "name": "Prompt area",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -30
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Send the prompt",
+        "width": 340,
+        "height": 210,
+        "color": 7
+      },
+      "id": "chat-area",
+      "name": "Chat area",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        -30
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "start",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "complete",
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "deepseek/deepseek-v4-1-flash"
+        },
+        "inputMode": "prompt",
+        "prompt": "Say hello in one short sentence."
+      },
+      "id": "message-a-model",
+      "name": "Message a Model",
+      "type": "n8n-nodes-straitly.straitly",
+      "typeVersion": 1,
+      "position": [
+        300,
+        40
+      ],
+      "credentials": {
+        "straitlyApi": {
+          "name": "Your Straitly API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Message a Model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

@@ -19,5 +19,9 @@ export interface ResourceModule {
 	 */
 	properties: INodeProperties[];
 	/** Runs one input item. Return one object or an array of objects (one output item each). */
-	execute(this: IExecuteFunctions, operation: string, itemIndex: number): Promise<IDataObject | IDataObject[]>;
+	execute(
+		this: IExecuteFunctions,
+		operation: string,
+		itemIndex: number,
+	): Promise<IDataObject | IDataObject[]>;
 }
