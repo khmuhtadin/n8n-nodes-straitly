@@ -51,7 +51,7 @@
     {
       "parameters": {
         "content": "### Pick the cheapest listed input price",
-        "width": 320,
+        "width": 380,
         "height": 210,
         "color": 7
       },
@@ -60,7 +60,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        440,
+        420,
         -30
       ]
     },
@@ -96,7 +96,10 @@
         "resource": "model",
         "operation": "getMany",
         "returnAll": true,
-        "simplify": false
+        "simplify": true,
+        "filters": {
+          "vision": true
+        }
       },
       "id": "get-models",
       "name": "Get Models",
@@ -114,25 +117,12 @@
     },
     {
       "parameters": {
-        "jsCode": "const models = $input.all().flatMap(i => Array.isArray(i.json.data) ? i.json.data : [i.json]);\nconst candidates = models.filter(m => m.architecture?.input_modalities?.includes('image') && m.pricing?.prompt != null && m.pricing.prompt !== '' && Number.isFinite(Number(m.pricing.prompt)) && Number(m.pricing.prompt) >= 0).sort((a, b) => Number(a.pricing.prompt) - Number(b.pricing.prompt));\nif (!candidates.length) throw new Error('No vision model with a listed input price was returned');\nreturn [{json: {model: candidates[0].id, inputPrice: candidates[0].pricing.prompt}}];"
-      },
-      "id": "select-vision-model",
-      "name": "Select Vision Model",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        510,
-        40
-      ]
-    },
-    {
-      "parameters": {
         "resource": "chat",
         "operation": "complete",
         "model": {
           "__rl": true,
           "mode": "id",
-          "value": "={{ $json.model }}"
+          "value": "={{ $json.id }}"
         },
         "inputMode": "prompt",
         "prompt": "Describe the image briefly.",
@@ -153,6 +143,40 @@
           "name": "Your Straitly API"
         }
       }
+    },
+    {
+      "id": "sortp",
+      "name": "Sort by Input Price",
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        470,
+        40
+      ],
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "input_price_usd_per_million",
+              "order": "ascending"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "limit1",
+      "name": "Keep Cheapest",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        610,
+        40
+      ],
+      "parameters": {
+        "maxItems": 1
+      }
     }
   ],
   "connections": {
@@ -171,14 +195,25 @@
       "main": [
         [
           {
-            "node": "Select Vision Model",
+            "node": "Sort by Input Price",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Select Vision Model": {
+    "Sort by Input Price": {
+      "main": [
+        [
+          {
+            "node": "Keep Cheapest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep Cheapest": {
       "main": [
         [
           {
