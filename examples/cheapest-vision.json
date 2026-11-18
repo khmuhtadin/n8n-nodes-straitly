@@ -51,7 +51,7 @@
     {
       "parameters": {
         "content": "### Pick the cheapest listed input price",
-        "width": 380,
+        "width": 355,
         "height": 210,
         "color": 7
       },
